@@ -1,5 +1,5 @@
 const Course = ({ course }) => {
-  const Header = ({ course }) => {
+  const Header = () => {
     return <h1>{course.name}</h1>;
   };
 
@@ -15,39 +15,30 @@ const Course = ({ course }) => {
   //     );
   //   };
 
-  const Part = (props) => {
-    console.log(props);
+  const Part = ({ part }) => {
+    console.log(part);
     return (
       <p>
-        {props.part} {props.exercises}
+        {part.name} {part.exercises}
       </p>
     );
   };
 
-  const Content = ({ course }) => {
-    console.log({ course });
+  const Content = () => {
+    console.log(course.parts);
     return (
       <div>
-        <Part
-          part={course.parts[0].name}
-          exercises={course.parts[0].exercises}
-        />
-        <Part
-          part={course.parts[1].name}
-          exercises={course.parts[1].exercises}
-        />
-        <Part
-          part={course.parts[2].name}
-          exercises={course.parts[2].exercises}
-        />
+        {course.parts.map((part) => (
+          <Part key={part.id} part={part} />
+        ))}
       </div>
     );
   };
 
   return (
     <div>
-      <Header course={course} />
-      <Content course={course} />
+      <Header />
+      <Content />
       {/* <Total course={course} /> */}
     </div>
   );
