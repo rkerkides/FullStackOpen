@@ -3,17 +3,16 @@ const Course = ({ course }) => {
     return <h1>{course.name}</h1>;
   };
 
-  //   const Total = (props) => {
-  //     console.log(props);
-  //     return (
-  //       <p>
-  //         Number of exercises{" "}
-  //         {props.parts[0].exercises +
-  //           props.parts[1].exercises +
-  //           props.parts[2].exercises}
-  //       </p>
-  //     );
-  //   };
+  const Total = () => {
+    return (
+      <p>
+        <strong>
+          Number of exercises{" "}
+          {course.parts.reduce((total, part) => total + part.exercises, 0)}
+        </strong>
+      </p>
+    );
+  };
 
   const Part = ({ part }) => {
     console.log(part);
@@ -39,7 +38,7 @@ const Course = ({ course }) => {
     <div>
       <Header />
       <Content />
-      {/* <Total course={course} /> */}
+      <Total />
     </div>
   );
 };
