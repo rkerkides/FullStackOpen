@@ -8,8 +8,21 @@ const App = () => {
     return persons.map((person) => <p key={person.name}>{person.name}</p>);
   };
 
+  const checkDuplicate = (nameToCheck) => {
+    const upperCaseName = nameToCheck.toUpperCase();
+    return persons.some(
+      (person) => person.name.toUpperCase() === upperCaseName
+    );
+  };
+
   const addPerson = (event) => {
     event.preventDefault();
+
+    if (checkDuplicate(newName)) {
+      alert(`${newName} is already added to the phonebook.`);
+      return;
+    }
+
     const newPerson = { name: newName };
     setPersons([...persons, newPerson]);
     setNewName("");
