@@ -6,13 +6,18 @@ const App = () => {
   ]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const PersonsList = () => {
-    return persons.map((person) => (
-      <p key={person.name}>
-        {person.name} {person.number}
-      </p>
-    ));
+    return persons
+      .filter((person) =>
+        person.name.toUpperCase().includes(searchTerm.toUpperCase())
+      )
+      .map((person) => (
+        <p key={person.name}>
+          {person.name} {person.number}
+        </p>
+      ));
   };
 
   const checkDuplicate = (nameToCheck) => {
@@ -44,9 +49,18 @@ const App = () => {
     setNewNumber(event.target.value);
   };
 
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
+      <div>
+        filter shown with{" "}
+        <input value={searchTerm} onChange={handleSearchChange} />
+      </div>
+      <h2>Add new</h2>
       <form onSubmit={addPerson}>
         <div>
           name: <input value={newName} onChange={handleNameChange} />
