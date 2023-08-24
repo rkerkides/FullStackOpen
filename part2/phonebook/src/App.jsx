@@ -1,4 +1,7 @@
 import { useState } from "react";
+import SearchFilter from "./Components/SearchFilter";
+import PersonForm from "./Components/PersonForm";
+import PersonsList from "./Components/PersonsList";
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -7,18 +10,6 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-
-  const PersonsList = () => {
-    return persons
-      .filter((person) =>
-        person.name.toUpperCase().includes(searchTerm.toUpperCase())
-      )
-      .map((person) => (
-        <p key={person.name}>
-          {person.name} {person.number}
-        </p>
-      ));
-  };
 
   const checkDuplicate = (nameToCheck) => {
     const upperCaseName = nameToCheck.toUpperCase();
@@ -56,24 +47,20 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <div>
-        filter shown with{" "}
-        <input value={searchTerm} onChange={handleSearchChange} />
-      </div>
+      <SearchFilter
+        searchTerm={searchTerm}
+        handleSearchChange={handleSearchChange}
+      />
       <h2>Add new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input value={newName} onChange={handleNameChange} />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNumberChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm
+        addPerson={addPerson}
+        newName={newName}
+        newNumber={newNumber}
+        handleNameChange={handleNameChange}
+        handleNumberChange={handleNumberChange}
+      />
       <h2>Numbers</h2>
-      <PersonsList />
+      <PersonsList persons={persons} searchTerm={searchTerm} />
     </div>
   );
 };
