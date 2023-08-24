@@ -1,11 +1,18 @@
 import { useState } from "react";
 
 const App = () => {
-  const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
+  const [persons, setPersons] = useState([
+    { name: "Arto Hellas", number: "39-44-5323523" },
+  ]);
   const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
 
   const PersonsList = () => {
-    return persons.map((person) => <p key={person.name}>{person.name}</p>);
+    return persons.map((person) => (
+      <p key={person.name}>
+        {person.name} {person.number}
+      </p>
+    ));
   };
 
   const checkDuplicate = (nameToCheck) => {
@@ -23,13 +30,18 @@ const App = () => {
       return;
     }
 
-    const newPerson = { name: newName };
+    const newPerson = { name: newName, number: newNumber };
     setPersons([...persons, newPerson]);
     setNewName("");
+    setNewNumber("");
   };
 
   const handleNameChange = (event) => {
     setNewName(event.target.value);
+  };
+
+  const handleNumberChange = (event) => {
+    setNewNumber(event.target.value);
   };
 
   return (
@@ -38,6 +50,9 @@ const App = () => {
       <form onSubmit={addPerson}>
         <div>
           name: <input value={newName} onChange={handleNameChange} />
+        </div>
+        <div>
+          number: <input value={newNumber} onChange={handleNumberChange} />
         </div>
         <div>
           <button type="submit">add</button>
