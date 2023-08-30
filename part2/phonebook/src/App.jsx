@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import SearchFilter from "./Components/SearchFilter";
 import PersonForm from "./Components/PersonForm";
 import PersonsList from "./Components/PersonsList";
@@ -69,7 +68,11 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <h2>Numbers</h2>
-      <PersonsList persons={persons} searchTerm={searchTerm} />
+      <PersonsList
+        persons={persons}
+        searchTerm={searchTerm}
+        setPersons={setPersons}
+      />
     </div>
   );
 };
