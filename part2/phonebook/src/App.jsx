@@ -3,6 +3,7 @@ import axios from "axios";
 import SearchFilter from "./Components/SearchFilter";
 import PersonForm from "./Components/PersonForm";
 import PersonsList from "./Components/PersonsList";
+import personService from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -27,8 +28,8 @@ const App = () => {
 
     const newPerson = { name: newName, number: newNumber };
 
-    axios.post("http://localhost:3001/persons", newPerson).then((response) => {
-      setPersons([...persons, newPerson]);
+    personService.create(newPerson).then((returnedPerson) => {
+      setPersons(persons.concat(returnedPerson));
       setNewName("");
       setNewNumber("");
     });
@@ -47,10 +48,8 @@ const App = () => {
   };
 
   useEffect(() => {
-    console.log("effect");
-    axios.get("http://localhost:3001/persons").then((response) => {
-      console.log("promise fulfilled");
-      setPersons(response.data);
+    personService.getAll().then((initialPersons) => {
+      setPersons(initialPersons);
     });
   }, []);
 
