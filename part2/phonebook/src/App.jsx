@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import SearchFilter from "./Components/SearchFilter";
 import PersonForm from "./Components/PersonForm";
 import PersonsList from "./Components/PersonsList";
@@ -10,28 +10,42 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
-  const checkDuplicate = (nameToCheck) => {
-    const upperCaseName = nameToCheck.toUpperCase();
-    return persons.some(
-      (person) => person.name.toUpperCase() === upperCaseName
-    );
-  };
-
   const addPerson = (event) => {
     event.preventDefault();
 
-    if (checkDuplicate(newName)) {
-      alert(`${newName} is already added to the phonebook.`);
-      return;
+    const existingPerson = persons.find((person) => person.name === newName);
+
+    if (existingPerson) {
+      const confirmUpdate = window.confirm(
+        `${newName} is already added to the phonebook. Do you want to update the number?`
+      );
+      if (confirmUpdate) {
+        const updatedPerson = { ...existingPerson, number: newNumber };
+
+        personService
+          .update(existingPerson.id, updatedPerson)
+          .then((returnedPerson) => {
+            setPersons(
+              persons.map((person) =>
+                person.id === returnedPerson.id ? returnedPerson : person
+              )
+            );
+            setNewName("");
+            setNewNumber("");
+          })
+          .catch((error) => {
+            console.error("Error updating person:", error);
+          });
+      }
+    } else {
+      const newPerson = { name: newName, number: newNumber };
+
+      personService.create(newPerson).then((returnedPerson) => {
+        setPersons(persons.concat(returnedPerson));
+        setNewName("");
+        setNewNumber("");
+      });
     }
-
-    const newPerson = { name: newName, number: newNumber };
-
-    personService.create(newPerson).then((returnedPerson) => {
-      setPersons(persons.concat(returnedPerson));
-      setNewName("");
-      setNewNumber("");
-    });
   };
 
   const handleNameChange = (event) => {
