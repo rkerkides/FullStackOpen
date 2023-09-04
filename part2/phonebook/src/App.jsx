@@ -3,12 +3,14 @@ import SearchFilter from "./Components/SearchFilter";
 import PersonForm from "./Components/PersonForm";
 import PersonsList from "./Components/PersonsList";
 import personService from "./services/persons";
+import Notification from "./Components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [notificationMSG, setNotificationMSG] = useState(null);
 
   const addPerson = (event) => {
     event.preventDefault();
@@ -32,6 +34,10 @@ const App = () => {
             );
             setNewName("");
             setNewNumber("");
+            setNotificationMSG("Number successfully updated!");
+            setTimeout(() => {
+              setNotificationMSG(null);
+            }, 5000);
           })
           .catch((error) => {
             console.error("Error updating person:", error);
@@ -42,6 +48,10 @@ const App = () => {
 
       personService.create(newPerson).then((returnedPerson) => {
         setPersons(persons.concat(returnedPerson));
+        setNotificationMSG(`${newName}'s number successfully added!`);
+        setTimeout(() => {
+          setNotificationMSG(null);
+        }, 5000);
         setNewName("");
         setNewNumber("");
       });
@@ -69,6 +79,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification message={notificationMSG} />
       <SearchFilter
         searchTerm={searchTerm}
         handleSearchChange={handleSearchChange}
@@ -86,6 +97,7 @@ const App = () => {
         persons={persons}
         searchTerm={searchTerm}
         setPersons={setPersons}
+        setNotificationMSG={setNotificationMSG}
       />
     </div>
   );
