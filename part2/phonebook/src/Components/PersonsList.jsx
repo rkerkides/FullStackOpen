@@ -5,6 +5,7 @@ const PersonsList = ({
   searchTerm,
   setPersons,
   setNotificationMSG,
+  setIsSuccessful,
 }) => {
   const deletePerson = (id, name) => {
     if (window.confirm(`Do you really want to delete ${name}?`)) {
@@ -13,12 +14,18 @@ const PersonsList = ({
         .then(() => {
           setPersons(persons.filter((person) => person.id !== id));
           setNotificationMSG(`${name} successfully deleted!`);
+          setIsSuccessful(true);
           setTimeout(() => {
             setNotificationMSG(null);
           }, 5000);
         })
         .catch((error) => {
           console.error("Error deleting person:", error);
+          setNotificationMSG(`Error deleting ${name}!`);
+          setIsSuccessful(false);
+          setTimeout(() => {
+            setNotificationMSG(null);
+          }, 5000);
         });
     }
   };

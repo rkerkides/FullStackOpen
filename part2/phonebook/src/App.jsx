@@ -11,6 +11,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [notificationMSG, setNotificationMSG] = useState(null);
+  const [isSuccessful, setIsSuccessful] = useState(true);
 
   const addPerson = (event) => {
     event.preventDefault();
@@ -35,26 +36,43 @@ const App = () => {
             setNewName("");
             setNewNumber("");
             setNotificationMSG("Number successfully updated!");
+            setIsSuccessful(true);
             setTimeout(() => {
               setNotificationMSG(null);
             }, 5000);
           })
           .catch((error) => {
             console.error("Error updating person:", error);
+            setNotificationMSG(`Error updating ${newName}!`);
+            setIsSuccessful(false);
+            setTimeout(() => {
+              setNotificationMSG(null);
+            }, 5000);
           });
       }
     } else {
       const newPerson = { name: newName, number: newNumber };
 
-      personService.create(newPerson).then((returnedPerson) => {
-        setPersons(persons.concat(returnedPerson));
-        setNotificationMSG(`${newName}'s number successfully added!`);
-        setTimeout(() => {
-          setNotificationMSG(null);
-        }, 5000);
-        setNewName("");
-        setNewNumber("");
-      });
+      personService
+        .create(newPerson)
+        .then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson));
+          setNotificationMSG(`${newName}'s number successfully added!`);
+          setIsSuccessful(true);
+          setTimeout(() => {
+            setNotificationMSG(null);
+          }, 5000);
+          setNewName("");
+          setNewNumber("");
+        })
+        .catch((error) => {
+          console.error("Error adding person:", error);
+          setNotificationMSG(`Error adding ${newName}!`);
+          setIsSuccessful(false);
+          setTimeout(() => {
+            setNotificationMSG(null);
+          }, 5000);
+        });
     }
   };
 
@@ -79,7 +97,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <Notification message={notificationMSG} />
+      <Notification message={notificationMSG} isSuccessful={isSuccessful} />
       <SearchFilter
         searchTerm={searchTerm}
         handleSearchChange={handleSearchChange}
@@ -98,6 +116,7 @@ const App = () => {
         searchTerm={searchTerm}
         setPersons={setPersons}
         setNotificationMSG={setNotificationMSG}
+        setIsSuccessful={setIsSuccessful}
       />
     </div>
   );
