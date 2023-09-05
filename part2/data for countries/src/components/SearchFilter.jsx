@@ -1,7 +1,7 @@
 const SearchFilter = ({ searchTerm, handleSearchChange }) => {
   return (
     <div>
-      find countries <input value={searchTerm} onChange={handleSearchChange} />
+      Find countries <input value={searchTerm} onChange={handleSearchChange} />
     </div>
   );
 };
