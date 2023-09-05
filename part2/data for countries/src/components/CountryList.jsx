@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
 import countryAPI from "../services/countries";
+import Weather from "./Weather";
 
 const CountryList = ({ searchTerm }) => {
   const [countries, setCountries] = useState([]);
   const [filteredCountries, setFilteredCountries] = useState([]);
-  const [selectedCountry, setSelectedCountry] = useState(null); // Track the selected country
+  const [selectedCountry, setSelectedCountry] = useState(null);
 
   useEffect(() => {
-    countryAPI.getAll().then((countriesList) => {
-      setCountries(countriesList);
-    });
+    countryAPI.getAll().then((countriesList) => setCountries(countriesList));
   }, []);
 
   useEffect(() => {
@@ -23,46 +22,37 @@ const CountryList = ({ searchTerm }) => {
     const countryToShow = filteredCountries.find(
       (country) => country.name.common === name
     );
-
-    if (countryToShow) {
-      setSelectedCountry(countryToShow);
-    }
+    if (countryToShow) setSelectedCountry(countryToShow);
   };
 
-  const renderSelectedCountry = () => {
-    if (
-      selectedCountry &&
-      filteredCountries.length > 1 &&
-      filteredCountries.length < 10
-    ) {
-      return (
-        <div>
-          <h2>{selectedCountry.name.common}</h2>
-          <p>Capital: {selectedCountry.capital[0]}</p>
-          <p>Area: {selectedCountry.area} square kilometers</p>
-          <p>Languages:</p>
-          <ul>
-            {Object.values(selectedCountry.languages).map((language, index) => (
-              <li key={index}>{language}</li>
-            ))}
-          </ul>
-          <img
-            src={selectedCountry.flags.svg}
-            alt={`Flag of ${selectedCountry.name.common}`}
-            width="150"
-          />
-        </div>
-      );
-    }
-
-    return null;
-  };
+  const renderCountryDetails = (country) => (
+    <div>
+      <h2>{country.name.common}</h2>
+      <p>Capital: {country.capital[0]}</p>
+      <p>Area: {country.area} square kilometers</p>
+      <p>Languages:</p>
+      <ul>
+        {Object.values(country.languages).map((language, index) => (
+          <li key={index}>{language}</li>
+        ))}
+      </ul>
+      <img
+        src={country.flags.svg}
+        alt={`Flag of ${country.name.common}`}
+        width="150"
+      />
+      <Weather capital={country.capital[0]} />
+    </div>
+  );
 
   return (
     <div>
-      {filteredCountries.length > 10 ? (
+      {filteredCountries.length === 0 && <p>No matches found.</p>}
+      {filteredCountries.length > 10 && (
         <p>Too many matches, please be more specific.</p>
-      ) : filteredCountries.length > 1 ? (
+      )}
+      {filteredCountries.length > 1 &&
+        filteredCountries.length <= 10 &&
         filteredCountries.map((country) => (
           <div key={country.name.common}>
             {country.name.common}{" "}
@@ -70,30 +60,13 @@ const CountryList = ({ searchTerm }) => {
               show
             </button>
           </div>
-        ))
-      ) : filteredCountries.length === 1 ? (
-        <div>
-          <h2>{filteredCountries[0].name.common}</h2>
-          <p>Capital: {filteredCountries[0].capital[0]}</p>
-          <p>Area: {filteredCountries[0].area} square kilometers</p>
-          <p>Languages:</p>
-          <ul>
-            {Object.values(filteredCountries[0].languages).map(
-              (language, index) => (
-                <li key={index}>{language}</li>
-              )
-            )}
-          </ul>
-          <img
-            src={filteredCountries[0].flags.svg}
-            alt={`Flag of ${filteredCountries[0].name.common}`}
-            width="150"
-          />
-        </div>
-      ) : (
-        <p>No matches found.</p>
-      )}
-      {renderSelectedCountry()}
+        ))}
+      {filteredCountries.length === 1 &&
+        renderCountryDetails(filteredCountries[0])}
+      {selectedCountry &&
+        filteredCountries.length > 1 &&
+        filteredCountries.length < 10 &&
+        renderCountryDetails(selectedCountry)}
     </div>
   );
 };
