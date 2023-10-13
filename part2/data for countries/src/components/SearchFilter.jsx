@@ -1,3 +1,4 @@
+// SearchFilter.js - Component for the search box
 const SearchFilter = ({ searchTerm, handleSearchChange }) => {
   return (
     <div>

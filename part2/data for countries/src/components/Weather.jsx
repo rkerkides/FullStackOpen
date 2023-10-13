@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 
+// WeatherApp.js - Component to fetch and display weather data
 const WeatherApp = ({ capital }) => {
   const apiKey = import.meta.env.VITE_OPENWEATHER_API_KEY;
   const [weatherData, setWeatherData] = useState(null);

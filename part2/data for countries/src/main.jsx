@@ -1,3 +1,4 @@
+// main.js - Entry point for the application
 import ReactDOM from "react-dom/client";
 
 import App from "./App";
